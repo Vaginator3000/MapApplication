@@ -1,4 +1,4 @@
-package com.template.mapapplication.ui.dashboard
+package com.template.mapapplication.ui.places
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,13 +8,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.template.mapapplication.R
-import com.template.mapapplication.databinding.FragmentDashboardBinding
+import com.template.mapapplication.databinding.FragmentPlacesBinding
 
-class DashboardFragment : Fragment() {
+class PlacesFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
-    private var _binding: FragmentDashboardBinding? = null
+    private lateinit var dashboardViewModel: PlacesViewModel
+    private var _binding: FragmentPlacesBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -26,9 +25,9 @@ class DashboardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
+            ViewModelProvider(this).get(PlacesViewModel::class.java)
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentPlacesBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textDashboard
