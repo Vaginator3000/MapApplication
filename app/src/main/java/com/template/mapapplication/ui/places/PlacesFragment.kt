@@ -22,11 +22,15 @@ class PlacesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         placesViewModel.text.observe(viewLifecycleOwner, Observer {
             binding.textDashboard.text = it
         })
-        return binding.root
     }
 
 }
