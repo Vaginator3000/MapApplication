@@ -11,23 +11,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.template.mapapplication.R
 import com.template.mapapplication.databinding.FragmentMapBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MapFragment : Fragment() {
-    private val binding: FragmentMapBinding by viewBinding(CreateMethod.INFLATE)
+class MapFragment : Fragment(R.layout.fragment_map) {
+    private val binding: FragmentMapBinding by viewBinding(FragmentMapBinding::bind)
     private val mapViewModel by lazy { ViewModelProvider(this).get(MapViewModel::class.java) }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
