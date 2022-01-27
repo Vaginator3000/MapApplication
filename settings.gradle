@@ -8,3 +8,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "MapApplication"
 include ':app'
+include ':domain'
+include ':data'
+include ':models'
