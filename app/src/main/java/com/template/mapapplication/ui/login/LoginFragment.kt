@@ -20,4 +20,22 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         
         })
     }
+
+    private fun setRegistrationMode() {
+        with(binding) {
+            registrationBtn.alpha = 0.7f
+            authBtn.alpha = 1f
+            registrationGroup.visibility = View.VISIBLE
+            authenticationGroup.visibility = View.GONE
+        }
+    }
+
+    private fun setAuthMode() {
+        with(binding) {
+            authBtn.alpha = 0.7f
+            registrationBtn.alpha = 1f
+            authenticationGroup.visibility = View.VISIBLE
+            registrationGroup.visibility = View.GONE
+        }
+    }
 }
