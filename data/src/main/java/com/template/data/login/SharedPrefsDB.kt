@@ -17,6 +17,14 @@ class SharedPrefsDB(context: Context) {
         return false
     }
 
+    fun authenticateByData(loginOrEmail: String, password: String) : Boolean {
+        getAllUsers().forEach { user ->
+            if ( user.password == password && (user.email == loginOrEmail || user.login == loginOrEmail) )
+                return true
+        }
+        return false
+    }
+
     fun addUser(user: LoginUserModel) {
         var users = getAllUsers()
         if (users.isEmpty())
