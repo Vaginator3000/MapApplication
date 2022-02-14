@@ -20,9 +20,6 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        placesViewModel.text.observe(viewLifecycleOwner, Observer {
-            binding.textDashboard.text = it
-        })
     }
 
 }

@@ -52,6 +52,9 @@ dependencies {
     //viewBinding
     implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.3'
 
+    //Yandex MapKit
+    implementation 'com.yandex.android:maps.mobile:4.0.0-full'
+
     //modules
     implementation project(path: ':domain')
     implementation project(path: ':data')
