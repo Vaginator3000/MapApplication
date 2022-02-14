@@ -2,6 +2,7 @@ package com.template.mapapplication.ui.login
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -20,4 +21,23 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         
         })
     }
+
+    private fun setRegistrationMode() {
+        with(binding) {
+            registrationBtn.alpha = 0.7f
+            authBtn.alpha = 1f
+            registrationGroup.isVisible = true
+            authenticationGroup.isVisible = false
+        }
+    }
+
+    private fun setAuthMode() {
+        with(binding) {
+            authBtn.alpha = 0.7f
+            registrationBtn.alpha = 1f
+            authenticationGroup.isVisible = true
+            registrationGroup.isVisible = false
+        }
+    }
+
 }
