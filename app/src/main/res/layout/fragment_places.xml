@@ -8,7 +8,6 @@
 
     <TextView
         android:id="@+id/noPlacesYetTextView"
-        tools:text="Корзина пуста!"
         android:text="@string/no_places_yet"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"

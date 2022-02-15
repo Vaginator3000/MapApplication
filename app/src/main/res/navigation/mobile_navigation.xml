@@ -3,7 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_map">
+    app:startDestination="@+id/login_fragment">
+
+    <fragment
+        android:id="@+id/login_fragment"
+        android:name="com.template.mapapplication.ui.login.LoginFragment"
+        tools:layout="@layout/fragment_login" />
 
     <fragment
         android:id="@+id/navigation_map"
