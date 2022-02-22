@@ -33,37 +33,37 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             }
 
             continueAuthBtn.setOnClickListener {
-                val loginOrEmail = (loginOrEmailEditText.text ?: return@setOnClickListener).toString().trim()
-                val password = (passwordEditText.text ?: return@setOnClickListener).toString()
+                if (checkFieldsAreCorrectAndNotEmpty()) {
+                    val loginOrEmail = loginOrEmailEditText.text.toString().trim()
+                    val password = passwordEditText.text.toString()
 
-                if (!checkFieldsAreCorrectAndNotEmpty()) return@setOnClickListener
-
-                if (loginViewModel.authenticate(loginOrEmail = loginOrEmail, password = password)) {
-                    // navigateToNextFragment()
-                } else
-                    showToast(getString(R.string.incorrect_login_or_password))
+                    if (loginViewModel.authenticate(loginOrEmail = loginOrEmail, password = password)) {
+                        // navigateToNextFragment()
+                    } else {
+                        showToast(getString(R.string.incorrect_login_or_password))
+                    }
+                }
             }
 
             continueRegBtn.setOnClickListener {
-                val login = (loginEditText.text ?: return@setOnClickListener).toString().trim()
-                val email = (emailEditText.text ?: return@setOnClickListener).toString().trim()
-                val pass1 = (pass1EditText.text ?: return@setOnClickListener).toString()
+                if (checkFieldsAreCorrectAndNotEmpty()) {
+                    val login = loginEditText.text.toString().trim()
+                    val email = emailEditText.text.toString().trim()
+                    val pass1 = pass1EditText.text.toString()
 
-                if (!checkFieldsAreCorrectAndNotEmpty()) return@setOnClickListener
-
-                if (loginViewModel.checkUserAlreadyExist(login = login, email = email)) {
-                    showToast(message = getString(R.string.user_already_exists))
-                    return@setOnClickListener
+                    if (loginViewModel.checkUserAlreadyExist(login = login, email = email)) {
+                        showToast(message = getString(R.string.user_already_exists))
+                    } else {
+                        loginViewModel.addUser(
+                            user = LoginUserModel(
+                                login = login,
+                                password = pass1,
+                                email = email
+                            )
+                        )
+                        // navigateToNextFragment()
+                    }
                 }
-
-                loginViewModel.addUser(
-                    user = LoginUserModel(
-                        login = login,
-                        password = pass1,
-                        email = email
-                    )
-                )
-                // navigateToNextFragment()
             }
         }
     }
