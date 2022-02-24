@@ -1,6 +1,7 @@
 package com.template.mapapplication
 
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -35,8 +36,11 @@ class MainActivity : AppCompatActivity() {
         //Скрываю таббар на экране авторизации
         navController.addOnDestinationChangedListener { _, destination, _ ->
             navView.isVisible =
-                if (destination.id == R.id.navigation_login) false
-                else true
+                if (destination.id == R.id.navigation_login) {
+                    false
+                } else {
+                    true
+                }
         }
 
         //Чтоб не заливать ключ на гит
@@ -47,9 +51,10 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
-        if (navController.currentDestination?.id == R.id.navigation_login)
+        if (navController.currentDestination?.id == R.id.navigation_login) {
             super.onBackPressed()
-        else
+        } else {
             finish()
+        }
     }
 }
