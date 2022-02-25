@@ -8,7 +8,11 @@
     <fragment
         android:id="@+id/navigation_login"
         android:name="com.template.mapapplication.ui.login.LoginFragment"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_login_fragment_to_navigation_map"
+            app:destination="@id/navigation_map"/>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_map"

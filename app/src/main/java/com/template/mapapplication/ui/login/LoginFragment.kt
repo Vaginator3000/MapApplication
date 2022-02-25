@@ -1,6 +1,7 @@
 package com.template.mapapplication.ui.login
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -10,10 +11,11 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.template.mapapplication.R
 import com.template.mapapplication.databinding.FragmentLoginBinding
 import com.template.models.LoginUserModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
     private val binding: FragmentLoginBinding by viewBinding(FragmentLoginBinding::bind)
-    private val loginViewModel by lazy { ViewModelProvider(this).get(LoginViewModel::class.java) }
+    private val loginViewModel by viewModel<LoginViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
