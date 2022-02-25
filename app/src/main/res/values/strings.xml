@@ -2,15 +2,23 @@
     <string name="app_name">MapApplication</string>
     <string name="title_map">Map</string>
     <string name="title_places">Places</string>
+
     <string name="login_or_email_input">Логин или email</string>
-    <string name="password_hint">Пароль</string>
-    <string name="login_btn">Войти!</string>
-    <string name="auth_btn">Зарегистрироваться!</string>
     <string name="accept_policy_text">Согласен с правилами</string>
     <string name="repeat_password_hint">Повторите пароль</string>
+    <string name="password_hint">Пароль</string>
     <string name="email_hint">E-mail</string>
     <string name="login_hint">Логин</string>
-    <string name="authentication_menu_btn">Регистрация</string>
     <string name="login_menu_btn">Вход</string>
+    <string name="login_btn">Войти!</string>
+    <string name="authentication_menu_btn">Регистрация</string>
+    <string name="auth_btn">Зарегистрироваться!</string>
+
     <string name="no_places_yet">Нет сохраненых мест!</string>
+
+    <string name="incorrect_login_or_password">Неверный логин или пароль!</string>
+    <string name="user_already_exists">Пользователь уже существует!</string>
+    <string name="fields_cant_be_empty">Поля не могут быть пустыми!</string>
+    <string name="check_privacy_policy">Ознакомьтесь с правилами!</string>
+    <string name="passwords_are_different">Пароли не совпадают</string>
 </resources>
