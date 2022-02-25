@@ -1,5 +1,10 @@
 package com.template.domain.login
 
+import com.template.models.LoginUserModel
+
 interface Authentication {
-    fun authenticate(loginOrEmail: String, password: String) : Boolean
+    fun authByData(loginOrEmail: String, password: String) : Boolean
+    fun authBySession() : LoginUserModel?
+    fun saveSession(loginOrEmail: String)
+    fun removeSession()
 }

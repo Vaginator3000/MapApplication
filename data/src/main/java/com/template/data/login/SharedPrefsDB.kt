@@ -17,12 +17,38 @@ class SharedPrefsDB(context: Context) {
         return false
     }
 
-    fun authenticateByData(loginOrEmail: String, password: String) : Boolean {
+    fun authByData(loginOrEmail: String, password: String) : Boolean {
         getAllUsers().forEach { user ->
             if ( user.password == password && (user.email == loginOrEmail || user.login == loginOrEmail) )
                 return true
         }
         return false
+    }
+
+    fun authBySession() : LoginUserModel? {
+        val userInStr = sPrefs.getString("session", null) ?: return null
+
+        val type = object : TypeToken<LoginUserModel>() {}.type
+        val user: LoginUserModel = gson.fromJson(userInStr, type)
+
+        return user
+    }
+
+    fun saveSession(loginOrEmail: String) {
+        val user = getUserByLoginOrEmail(loginOrEmail)
+        sPrefs.edit()
+            .putString("session", gson.toJson(user))
+            .apply()
+    }
+
+    fun removeSession() {
+        sPrefs.edit()
+            .remove("session")
+            .apply()
+    }
+
+    private fun getUserByLoginOrEmail(loginOrEmail: String) : LoginUserModel {
+        return getAllUsers().first { it.email == loginOrEmail || it.login == loginOrEmail }
     }
 
     fun addUser(user: LoginUserModel) {

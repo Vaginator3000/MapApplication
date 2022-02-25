@@ -1,12 +1,11 @@
 package com.template.mapapplication.ui.login
 
+import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.template.mapapplication.R
 import com.template.mapapplication.databinding.FragmentLoginBinding
@@ -22,6 +21,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
         setAuthMode()
         setOnClicks()
+        tryAuthBySession()
     }
 
     private fun setOnClicks() {
@@ -39,7 +39,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     val loginOrEmail = loginOrEmailEditText.text.toString().trim()
                     val password = passwordEditText.text.toString()
 
-                    if (loginViewModel.authenticate(loginOrEmail = loginOrEmail, password = password)) {
+                    if (loginViewModel.authByData(loginOrEmail = loginOrEmail, password = password)) {
+                        showSaveSessionDialog(loginOrEmail = loginOrEmail)
                         // navigateToNextFragment()
                     } else {
                         showToast(getString(R.string.incorrect_login_or_password))
@@ -63,6 +64,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                                 email = email
                             )
                         )
+                        showSaveSessionDialog(loginOrEmail = login)
                         // navigateToNextFragment()
                     }
                 }
@@ -96,6 +98,37 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             }
         }
         return true
+    }
+
+    private fun tryAuthBySession() {
+        val user = loginViewModel.authBySession() ?: return
+        showAuthBySessionDialog(login = user.login)
+    }
+
+    private fun showAuthBySessionDialog(login: String) {
+        val loginAs = String.format(getString(R.string.login_as_request), login)
+        val dialog = AlertDialog.Builder(requireContext())
+            .setMessage(loginAs)
+            .setPositiveButton(getString(R.string.positive_answer)) { _,_ ->
+                loginViewModel.authBySession()
+                // navigateToNextFragment()
+            }
+            .setNegativeButton(getString(R.string.negative_answer)) { _, _ ->
+                loginViewModel.removeSession()
+            }
+            .create()
+        dialog.show()
+    }
+
+    private fun showSaveSessionDialog(loginOrEmail: String) {
+        val dialog = AlertDialog.Builder(requireContext())
+            .setMessage(getString(R.string.request_to_save_session))
+            .setPositiveButton(getString(R.string.positive_answer)) { _, _ ->
+                loginViewModel.saveSession(loginOrEmail = loginOrEmail)
+            }
+            .setNegativeButton(getString(R.string.negative_answer)) { _, _ -> }
+            .create()
+        dialog.show()
     }
 
     private fun showToast(message: String) {

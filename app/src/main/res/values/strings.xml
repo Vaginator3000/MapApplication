@@ -21,4 +21,8 @@
     <string name="fields_cant_be_empty">Поля не могут быть пустыми!</string>
     <string name="check_privacy_policy">Ознакомьтесь с правилами!</string>
     <string name="passwords_are_different">Пароли не совпадают</string>
+    <string name="request_to_save_session">Сохранить пользователя при выходе?</string>
+    <string name="positive_answer">Да</string>
+    <string name="negative_answer">Нет</string>
+    <string name="login_as_request">Продолжить как %s?</string>
 </resources>
