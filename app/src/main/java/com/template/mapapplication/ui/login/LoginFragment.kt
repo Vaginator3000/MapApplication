@@ -27,7 +27,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun startInBackground(foo: suspend CoroutineScope.() -> Unit) {
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             foo()
         }
     }
