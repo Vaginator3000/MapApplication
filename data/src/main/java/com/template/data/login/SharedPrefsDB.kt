@@ -10,7 +10,7 @@ class SharedPrefsDB(context: Context) {
     private val sPrefs = context.getSharedPreferences("data", Context.MODE_PRIVATE)
     private val gson = Gson()
 
-    fun isUserExist(login: String, email: String) : Boolean {
+    suspend fun isUserExist(login: String, email: String) : Boolean {
         getAllUsers().forEach { user ->
             if (user.email == email || user.login == login)
                 return true
@@ -18,7 +18,7 @@ class SharedPrefsDB(context: Context) {
         return false
     }
 
-    fun authByData(loginOrEmail: String, password: String) : Boolean {
+    suspend fun authByData(loginOrEmail: String, password: String) : Boolean {
         getAllUsers().forEach { user ->
             if ( user.password == password && (user.email == loginOrEmail || user.login == loginOrEmail) )
                 return true
@@ -26,7 +26,7 @@ class SharedPrefsDB(context: Context) {
         return false
     }
 
-    fun authBySession() : LoginUserModel? {
+    suspend fun authBySession() : LoginUserModel? {
         val userInStr = sPrefs.getString("session", null) ?: return null
 
         val type = object : TypeToken<LoginUserModel>() {}.type
@@ -35,24 +35,24 @@ class SharedPrefsDB(context: Context) {
         return user
     }
 
-    fun saveSession(loginOrEmail: String) {
+    suspend fun saveSession(loginOrEmail: String) {
         val user = getUserByLoginOrEmail(loginOrEmail)
         sPrefs.edit()
             .putString("session", gson.toJson(user))
             .apply()
     }
 
-    fun removeSession() {
+    suspend fun removeSession() {
         sPrefs.edit()
             .remove("session")
             .apply()
     }
 
-    private fun getUserByLoginOrEmail(loginOrEmail: String) : LoginUserModel {
+    private suspend fun getUserByLoginOrEmail(loginOrEmail: String) : LoginUserModel {
         return getAllUsers().first { it.email == loginOrEmail || it.login == loginOrEmail }
     }
 
-    fun addUser(user: LoginUserModel) {
+    suspend fun addUser(user: LoginUserModel) {
         var users = getAllUsers()
         if (users.isEmpty())
             users = listOf(user)
@@ -63,7 +63,7 @@ class SharedPrefsDB(context: Context) {
         saveUsers(users)
     }
 
-    private fun getAllUsers(): List<LoginUserModel> {
+    private suspend fun getAllUsers(): List<LoginUserModel> {
         val listInStr = sPrefs.getString("users", null) ?: return listOf()
 
         val type = object : TypeToken<List<LoginUserModel>>() {}.type
@@ -71,7 +71,7 @@ class SharedPrefsDB(context: Context) {
         return  users
     }
 
-    private fun saveUsers(users: List<LoginUserModel>) {
+    private suspend fun saveUsers(users: List<LoginUserModel>) {
         sPrefs.edit()
             .putString("users", gson.toJson(users))
             .apply()
