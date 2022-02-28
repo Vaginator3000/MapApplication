@@ -3,6 +3,7 @@ package com.template.mapapplication.ui.map
 import android.util.Log
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.template.mapapplication.PermissionsManager
 import com.template.mapapplication.R
 import com.template.mapapplication.databinding.FragmentMapBinding
 import com.yandex.mapkit.Animation
@@ -23,8 +24,15 @@ class MapFragment : Fragment(R.layout.fragment_map) {
     override fun onStart() {
         super.onStart()
         initMap()
+        requestAllPermissions()
         mapKitFactory.onStart()
         binding.mapview.onStart()
+    }
+
+    private fun requestAllPermissions() {
+        val permissionsManager = PermissionsManager(this)
+        permissionsManager.requestGeoPermission()
+        permissionsManager.requestLocationPermission()
     }
 
     private fun initMap() {

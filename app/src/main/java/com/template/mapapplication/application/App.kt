@@ -14,7 +14,10 @@ class App : Application() {
         super.onCreate()
 
         startKoin {
-            androidLogger(Level.DEBUG)
+            /* При импорте KPermissions(даже без использования, просто импорт),приложение билдится,
+                 но вылетает при запуске. Замена Debug на Error это чинит. Не понимаю почему
+             */
+            androidLogger(Level.ERROR)
             androidContext(this@App)
             modules(listOf(appModule, dataModule, domainModule))
         }

@@ -21,4 +21,9 @@
     <string name="fields_cant_be_empty">Поля не могут быть пустыми!</string>
     <string name="check_privacy_policy">Ознакомьтесь с правилами!</string>
     <string name="passwords_are_different">Пароли не совпадают</string>
+
+    <string name="location_permission_is_denied">Приложению необходим доступ к местоположению</string>
+    <string name="geo_is_disabled">Приложение не может определить Ваше местоположение!</string>
+    <string name="open_settings">Настройки</string>
+    <string name="cansel">Отмена</string>
 </resources>
