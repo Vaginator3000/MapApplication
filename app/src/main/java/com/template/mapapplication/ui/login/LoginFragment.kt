@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.template.mapapplication.R
 import com.template.mapapplication.databinding.FragmentLoginBinding
@@ -40,7 +41,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     val password = passwordEditText.text.toString()
 
                     if (loginViewModel.authenticate(loginOrEmail = loginOrEmail, password = password)) {
-                        // navigateToNextFragment()
+                        navigateToNextFragment()
                     } else {
                         showToast(getString(R.string.incorrect_login_or_password))
                     }
@@ -63,11 +64,16 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                                 email = email
                             )
                         )
-                        // navigateToNextFragment()
+                        navigateToNextFragment()
                     }
                 }
             }
         }
+    }
+
+    private fun navigateToNextFragment() {
+        val navController = findNavController()
+        navController.navigate(R.id.action_login_fragment_to_navigation_map)
     }
 
     private fun checkFieldsAreCorrectAndNotEmpty() : Boolean {

@@ -15,7 +15,7 @@ class LoginViewModel(
     private val sharedPrefsRegImpl : Registration
     ) : ViewModel() {
 
-    fun authenticate(loginOrEmail: String, password: String) : Boolean {
+    fun authenticate(loginOrEmail: String, password: String): Boolean {
         return sharedPrefsAuthImpl.authenticate(loginOrEmail = loginOrEmail, password = password)
     }
 
@@ -23,6 +23,7 @@ class LoginViewModel(
         sharedPrefsRegImpl.addUser(user = user)
     }
 
-    fun checkUserAlreadyExist(login: String, email: String) : Boolean {
+    fun checkUserAlreadyExist(login: String, email: String): Boolean {
         return sharedPrefsRegImpl.isUserExist(login, email)
     }
+}
