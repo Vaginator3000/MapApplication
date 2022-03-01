@@ -51,7 +51,6 @@ class LoginViewModel(
         viewModelScope.launch {
             sharedPrefsAuthImpl.saveSession(loginOrEmail)
         }
-    }
 
     fun removeSession() {
         viewModelScope.launch {
@@ -63,5 +62,8 @@ class LoginViewModel(
         viewModelScope.launch {
             sharedPrefsRegImpl.addUser(user = user)
         }
+        
+    fun checkUserAlreadyExist(login: String, email: String): Boolean {
+        return sharedPrefsRegImpl.isUserExist(login, email)
     }
 }

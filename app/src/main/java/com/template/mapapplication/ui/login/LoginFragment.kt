@@ -8,6 +8,8 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.template.mapapplication.R
 import com.template.mapapplication.databinding.FragmentLoginBinding
@@ -62,7 +64,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                                 }
                                 is Result.Success<*> -> {
                                     showSaveSessionDialog(loginOrEmail = loginOrEmail)
-                                //    navigateToNextFragment()
+                                    navigateToNextFragment()
                                 }
                             }
                         })
@@ -83,13 +85,18 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                                 }
                                 is Result.Success -> {
                                     showSaveSessionDialog(loginOrEmail = login)
-                                //    navigateToNextFragment()
+                                    navigateToNextFragment()
                                 }
                             }
                         })
                 }
             }
         }
+    }
+
+    private fun navigateToNextFragment() {
+        val navController = findNavController()
+        navController.navigate(R.id.action_login_fragment_to_navigation_map)
     }
 
     private fun checkFieldsAreCorrectAndNotEmpty() : Boolean {
