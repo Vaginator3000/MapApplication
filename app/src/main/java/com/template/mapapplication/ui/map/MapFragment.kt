@@ -1,8 +1,6 @@
 package com.template.mapapplication.ui.map
 
-import android.graphics.Color
 import android.graphics.PointF
-import android.util.Log
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.template.mapapplication.R
@@ -14,7 +12,6 @@ import com.yandex.mapkit.layers.ObjectEvent
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
-import com.yandex.runtime.image.ImageProvider
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener {
@@ -48,7 +45,7 @@ class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener 
 
     private fun setMapOnCurrentLocation() {
         userLocationLayer.isVisible = true
-        //userLocationLayer.isHeadingEnabled = true
+        userLocationLayer.isHeadingEnabled = false /* true - маркер статичный, вращается карта, false - наоборот */
         userLocationLayer.setObjectListener(this)
         PlacesTrakingHelper(locationManager).startTrackingLocation()
     }
@@ -62,18 +59,19 @@ class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener 
 
     override fun onObjectAdded(userLocationView : UserLocationView) {
         with(binding) {
+            //Центрируем карту, установив точку с местоположением по центру 
+            val widthCenter = mapview.width / 2f
+            val heightCenter = mapview.height / 2f
             userLocationLayer.setAnchor(
-                PointF((mapview.width * 0.5).toFloat(), (mapview.height * 0.5).toFloat()),
-                PointF((mapview.width * 0.5).toFloat(), (mapview.height * 0.83).toFloat() )
+                PointF(widthCenter, heightCenter),
+                PointF(widthCenter, heightCenter)
             )
         }
 
-        userLocationView.accuracyCircle.fillColor = Color.BLUE and -0x66000001
+        userLocationView.accuracyCircle.fillColor = R.color.accuracy_circle_color
     }
 
-    override fun onObjectRemoved(p0: UserLocationView) {
-    }
+    override fun onObjectRemoved(p0: UserLocationView) = Unit
 
-    override fun onObjectUpdated(p0: UserLocationView, p1: ObjectEvent) {
-    }
+    override fun onObjectUpdated(p0: UserLocationView, p1: ObjectEvent) = Unit
 }
