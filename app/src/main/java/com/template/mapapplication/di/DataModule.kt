@@ -9,11 +9,11 @@ import org.koin.dsl.module
 
 val dataModule = module {
     single<Authentication> {
-        SharedPrefsAuthenticationImpl(context = get())
+        SharedPrefsAuthenticationImpl(sharedPrefsDB = get())
     }
 
     single<Registration> {
-        SharedPrefsRegistrationImpl(context = get())
+        SharedPrefsRegistrationImpl(sharedPrefsDB = get())
     }
 
     single<SharedPrefsDB> {

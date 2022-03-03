@@ -26,4 +26,9 @@
     <string name="geo_is_disabled">Приложение не может определить Ваше местоположение!</string>
     <string name="open_settings">Настройки</string>
     <string name="cansel">Отмена</string>
+  
+    <string name="request_to_save_session">Сохранить пользователя при выходе?</string>
+    <string name="positive_answer">Да</string>
+    <string name="negative_answer">Нет</string>
+    <string name="login_as_request">Продолжить как %s?</string>
 </resources>

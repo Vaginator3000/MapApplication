@@ -3,6 +3,6 @@ package com.template.domain.login
 import com.template.models.LoginUserModel
 
 interface Registration {
-    fun addUser(user: LoginUserModel)
-    fun isUserExist(login: String, email: String) : Boolean
+    suspend fun addUser(user: LoginUserModel)
+    suspend fun isUserExist(login: String, email: String) : Boolean
 }
