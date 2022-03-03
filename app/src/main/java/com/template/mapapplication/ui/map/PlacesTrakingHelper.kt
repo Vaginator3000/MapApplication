@@ -3,36 +3,43 @@ package com.template.mapapplication.ui.map
 import android.util.Log
 import com.template.data.geocode.GeocodeRepositoryImpl
 import com.template.mapapplication.KeyClass
+import com.template.mapapplication.R
+import com.template.models.GeoResponseModel
 import com.yandex.mapkit.location.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class PlacesTrakingHelper(private val locationManager: LocationManager) : LocationListener {
-    var currentLocation : Location? = null
-    var previousLocation : Location? = null
+    var currentAddress : String? = null
+    var previousAddress : String? = null
 
     override fun onLocationUpdated(p0: Location) {
         checkLocationIsChanged(p0)
     }
 
     private fun checkLocationIsChanged(newLocation: Location) {
-        previousLocation = currentLocation
-        currentLocation = newLocation
-
-        if (currentLocation == null || previousLocation == null) return
 
         CoroutineScope(Dispatchers.IO).launch {
-            val geocode = "${currentLocation?.position?.longitude}, ${currentLocation?.position?.latitude}"
-            Log.e("AA", "geocode - $geocode")
-            val address = GeocodeRepositoryImpl().getAddress(key = KeyClass().GeocodeKey, geocode = geocode)
+            val geocode = "${newLocation.position.longitude}, ${newLocation.position.latitude}"
+            val address = GeocodeRepositoryImpl()
+                            .getAddress(key = KeyClass().GeocodeKey, geocode = geocode)
+                            .getFullAddress()
 
-            // первый элемент из этого списка - полный адрес. Его буду добавлять в базу
-            address.response.GeoObjectCollection.featureMember.forEach {
-                val index = address.response.GeoObjectCollection.featureMember.indexOf(it)
-                Log.e("AA", "$index - ${it.GeoObject.metaDataProperty.GeocoderMetaData.text}")
-            }
+            previousAddress = currentAddress
+            currentAddress = address
+            if (previousAddress == null || currentAddress == null) this.cancel(null)
+
+            //Если местоположение изменилось, значит юзер ушел в другое место и его фиксировать не надо
+            if (previousAddress != currentAddress) this.cancel(null)
+
+            TODO("save address to db")
         }
+    }
+
+    private fun GeoResponseModel.getFullAddress() : String {
+        return this.response.GeoObjectCollection.featureMember.first().GeoObject.metaDataProperty.GeocoderMetaData.text
     }
 
     override fun onLocationStatusUpdated(p0: LocationStatus) = Unit
@@ -40,8 +47,8 @@ class PlacesTrakingHelper(private val locationManager: LocationManager) : Locati
     fun startTrackingLocation() {
         locationManager.subscribeForLocationUpdates(
             0.0, /*desiredAccuracy, 0 for best possible accuracy*/
-            10000, /*minTime between location updates in milliseconds */
-            0.0, /*minDistance between location updates in meters */
+            (R.integer.time_between_location_updates_in_mills).toLong(), /*minTime between location updates in milliseconds */
+            (R.integer.distance_between_location_updates_in_meters).toDouble(), /*minDistance between location updates in meters */
             false, /*allowUseInBackground */
             FilteringMode.OFF, /*filteringMode */
             this /*locationListener */
