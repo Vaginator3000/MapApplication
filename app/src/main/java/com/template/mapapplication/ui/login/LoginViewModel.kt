@@ -1,7 +1,5 @@
 package com.template.mapapplication.ui.login
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.template.models.LoginUserModel
 import com.template.models.Result
 import androidx.lifecycle.ViewModel
@@ -51,6 +49,7 @@ class LoginViewModel(
         viewModelScope.launch {
             sharedPrefsAuthImpl.saveSession(loginOrEmail)
         }
+    }
 
     fun removeSession() {
         viewModelScope.launch {
@@ -62,8 +61,5 @@ class LoginViewModel(
         viewModelScope.launch {
             sharedPrefsRegImpl.addUser(user = user)
         }
-        
-    fun checkUserAlreadyExist(login: String, email: String): Boolean {
-        return sharedPrefsRegImpl.isUserExist(login, email)
     }
 }
