@@ -9,7 +9,7 @@ class SharedPrefsVisitedPlacesDB (context : Context) {
     private val sPrefs = context.getSharedPreferences("data", Context.MODE_PRIVATE)
     private val gson = Gson()
 
-    fun getAllVisitedPlaces(): List<VisitedPlaceModel>? {
+    suspend fun getAllVisitedPlaces(): List<VisitedPlaceModel>? {
         val listInStr = sPrefs.getString("VisitedPlaceModels", null) ?: return null
 
         val type = object : TypeToken<List<VisitedPlaceModel>>() {}.type
@@ -17,13 +17,13 @@ class SharedPrefsVisitedPlacesDB (context : Context) {
         return goods as MutableList<VisitedPlaceModel>
     }
 
-    fun savePlaces(goods: List<VisitedPlaceModel>) {
+    suspend fun savePlaces(goods: List<VisitedPlaceModel>) {
         sPrefs.edit()
             .putString("VisitedPlaceModels", gson.toJson(goods))
             .apply()
     }
 
-    fun addOrUpdatePlace(place: VisitedPlaceModel) {
+    suspend fun addOrUpdatePlace(place: VisitedPlaceModel) {
         val allPlaces = getAllVisitedPlaces()?.toMutableList()
         if (allPlaces == null) {
             savePlaces(listOf(place))
@@ -39,13 +39,13 @@ class SharedPrefsVisitedPlacesDB (context : Context) {
         savePlaces(allPlaces)
     }
 
-    fun removePlace(place: VisitedPlaceModel) {
+    suspend fun removePlace(place: VisitedPlaceModel) {
         val allPlaces = getAllVisitedPlaces()?.toMutableList() ?: return
         allPlaces.remove(place)
         savePlaces(allPlaces)
     }
 
-    fun removePlaceByIndex(index: Int) {
+    suspend fun removePlaceByIndex(index: Int) {
         val allPlaces = getAllVisitedPlaces()?.toMutableList() ?: return
         allPlaces.removeAt(index)
         savePlaces(allPlaces)
