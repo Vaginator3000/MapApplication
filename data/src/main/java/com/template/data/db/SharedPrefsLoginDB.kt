@@ -1,12 +1,11 @@
-package com.template.data.login
+package com.template.data.db
 
 import android.content.Context
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.template.models.LoginUserModel
 
-class SharedPrefsDB(context: Context) {
+class SharedPrefsLoginDB(context: Context) {
     private val sPrefs = context.getSharedPreferences("data", Context.MODE_PRIVATE)
     private val gson = Gson()
 
