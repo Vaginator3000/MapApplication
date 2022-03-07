@@ -1,7 +1,6 @@
 package com.template.mapapplication
 
 import android.os.Bundle
-import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -43,7 +42,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
 
         //Чтоб не заливать ключ на гит
-        MapKitFactory.setApiKey(KeyClass().key)
+        MapKitFactory.setApiKey(KeyClass().MapKey)
     }
 
     //Избегаю возвращения на фрагмент с авторизацией
