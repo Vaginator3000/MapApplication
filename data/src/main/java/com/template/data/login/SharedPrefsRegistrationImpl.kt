@@ -1,9 +1,10 @@
 package com.template.data.login
 
+import com.template.data.db.SharedPrefsLoginDB
 import com.template.domain.login.Registration
 import com.template.models.LoginUserModel
 
-class SharedPrefsRegistrationImpl(val sharedPrefsDB : SharedPrefsDB) : Registration {
+class SharedPrefsRegistrationImpl(val sharedPrefsDB : SharedPrefsLoginDB) : Registration {
 
     override suspend fun addUser(user: LoginUserModel) {
         sharedPrefsDB.addUser(user)

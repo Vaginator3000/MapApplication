@@ -1,10 +1,10 @@
 package com.template.mapapplication.ui.places
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.template.domain.repository.VisitedPlacesRepository
 
-class PlacesViewModel : ViewModel() {
+class PlacesViewModel(private val spVisitedPlacesRepositoryImpl : VisitedPlacesRepository) : ViewModel() {
 
     val text = MutableLiveData("This is Places Fragment")
 }
