@@ -1,9 +1,10 @@
 package com.template.data.login
 
+import com.template.data.db.SharedPrefsLoginDB
 import com.template.domain.login.Authentication
 import com.template.models.LoginUserModel
 
-class SharedPrefsAuthenticationImpl(val sharedPrefsDB : SharedPrefsDB) : Authentication {
+class SharedPrefsAuthenticationImpl(val sharedPrefsDB : SharedPrefsLoginDB) : Authentication {
 
     override suspend fun authByData(loginOrEmail: String, password: String) : Boolean {
         return sharedPrefsDB.authByData(
