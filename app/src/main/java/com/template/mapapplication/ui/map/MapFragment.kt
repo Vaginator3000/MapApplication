@@ -61,13 +61,14 @@ class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener 
         userLocationLayer.isHeadingEnabled = false /* true - маркер статичный, вращается карта, false - наоборот */
         userLocationLayer.setObjectListener(this)
         PlacesTrakingHelper(locationManager).startTrackingLocation()
-        
+    }
+
     private fun requestAllPermissions() {
         requestGeoPermission()
         requestLocationPermission()
     }
 
-    private fun checkLocationPermissionIsGranted() : Boolean {
+    private fun checkLocationPermissionIsGranted(): Boolean {
         return ActivityCompat.checkSelfPermission(
             requireContext(),
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -88,19 +89,19 @@ class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener 
         LocationSettingsRequest.Builder().setAlwaysShow(true)
         permissionsBuilder(
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION)
-            .build().send { result ->
-                if (result.allDenied())
-                    showToast(getString(R.string.location_permission_is_denied))
-            }
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ).build().send { result ->
+            if (result.allDenied())
+                showToast(getString(R.string.location_permission_is_denied))
+        }
     }
 
     fun requestGeoPermission() {
         if (checkIsGeoEnabled()) return
         AlertDialog.Builder(context)
             .setMessage(getString(R.string.geo_is_disabled))
-            .setPositiveButton(getString(R.string.open_settings)) { _,_ ->
-                startActivity( Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+            .setPositiveButton(getString(R.string.open_settings)) { _, _ ->
+                startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
             }
             .setNegativeButton(getString(R.string.cansel)) { _, _ -> {} }
             .create()
@@ -118,9 +119,9 @@ class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener 
         super.onStop()
     }
 
-    override fun onObjectAdded(userLocationView : UserLocationView) {
+    override fun onObjectAdded(userLocationView: UserLocationView) {
         with(binding) {
-            //Центрируем карту, установив точку с местоположением по центру 
+            //Центрируем карту, установив точку с местоположением по центру
             val widthCenter = mapview.width / 2f
             val heightCenter = mapview.height / 2f
             userLocationLayer.setAnchor(

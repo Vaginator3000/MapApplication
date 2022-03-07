@@ -14,14 +14,10 @@ val appModule = module {
     }
 
     viewModel<MapViewModel> {
-        MapViewModel(
-            spVisitedPlacesRepositoryImpl = get()
-        )
+        MapViewModel()
     }
 
     viewModel<PlacesViewModel> {
-        PlacesViewModel(
-            spVisitedPlacesRepositoryImpl = get()
-        )
+        PlacesViewModel()
     }
 }
