@@ -40,9 +40,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                     true
                 }
         }
-
-        //Чтоб не заливать ключ на гит
-        MapKitFactory.setApiKey(KeyClass().MapKey)
     }
 
     //Избегаю возвращения на фрагмент с авторизацией
