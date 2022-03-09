@@ -1,40 +1,56 @@
 package com.template.mapapplication.ui.map
 
-import android.util.Log
 import com.template.data.geocode.GeocodeRepositoryImpl
+import com.template.domain.repository.VisitedPlacesRepository
 import com.template.mapapplication.KeyClass
 import com.template.mapapplication.R
 import com.template.models.GeoResponseModel
+import com.template.models.VisitedPlaceModel
 import com.yandex.mapkit.location.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import java.text.SimpleDateFormat
+import java.util.*
 
-class PlacesTrakingHelper(private val locationManager: LocationManager) : LocationListener {
+class PlacesTrakingHelper(private val locationManager: LocationManager) : LocationListener, KoinComponent {
     var currentAddress : String? = null
     var previousAddress : String? = null
+    val spVisitedPlacesRepositoryImpl by inject<VisitedPlacesRepository>()
 
     override fun onLocationUpdated(p0: Location) {
         checkLocationIsChanged(p0)
     }
 
     private fun checkLocationIsChanged(newLocation: Location) {
-
         CoroutineScope(Dispatchers.IO).launch {
             val geocode = "${newLocation.position.longitude}, ${newLocation.position.latitude}"
             val address = GeocodeRepositoryImpl()
-                            .getAddress(key = KeyClass().GeocodeKey, geocode = geocode)
-                            .getFullAddress()
+                .getAddress(key = KeyClass().GeocodeKey, geocode = geocode)
+                .getFullAddress()
+            //
 
             previousAddress = currentAddress
             currentAddress = address
-            if (previousAddress == null || currentAddress == null) this.cancel(null)
 
-            //Если местоположение изменилось, значит юзер ушел в другое место и его фиксировать не надо
-            if (previousAddress != currentAddress) this.cancel(null)
+            //Фиксируем место если оно не изменилось с прошлой проверки. Значит, юзер задержался в этом месте
+            //Или если это первая проверка и предыдущего еще нет
+            if (previousAddress == null || previousAddress == currentAddress) {
+                addPlaceToDB(currentAddress!!) //проверка на нул выше
+            }
+        }
+    }
 
-            TODO("save address to db")
+    private fun addPlaceToDB(address: String) {
+        val currentDate = SimpleDateFormat("dd/M/yyyy").format(Date())
+        val currentTime = SimpleDateFormat("hh:mm").format(Date())
+        val place = VisitedPlaceModel(address = address,
+                                        date = currentDate,
+                                        time = currentTime)
+        CoroutineScope(Dispatchers.IO).launch {
+            spVisitedPlacesRepositoryImpl.addOrUpdatePlace(place)
         }
     }
 
@@ -47,7 +63,7 @@ class PlacesTrakingHelper(private val locationManager: LocationManager) : Locati
     fun startTrackingLocation() {
         locationManager.subscribeForLocationUpdates(
             0.0, /*desiredAccuracy, 0 for best possible accuracy*/
-            (R.integer.time_between_location_updates_in_mills).toLong(), /*minTime between location updates in milliseconds */
+            (R.integer.time_between_location_updates_in_milliseconds).toLong(), /*minTime between location updates in milliseconds */
             (R.integer.distance_between_location_updates_in_meters).toDouble(), /*minDistance between location updates in meters */
             false, /*allowUseInBackground */
             FilteringMode.OFF, /*filteringMode */

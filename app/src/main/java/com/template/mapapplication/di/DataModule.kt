@@ -26,4 +26,8 @@ val dataModule = module {
     single<SharedPrefsLoginDB> {
         SharedPrefsLoginDB(context = get())
     }
+
+    single<SharedPrefsVisitedPlacesDB> {
+        SharedPrefsVisitedPlacesDB(context = get())
+    }
 }

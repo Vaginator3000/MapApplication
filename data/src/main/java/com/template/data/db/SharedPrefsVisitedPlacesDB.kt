@@ -1,6 +1,7 @@
 package com.template.data.db
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.template.models.VisitedPlaceModel
@@ -14,10 +15,12 @@ class SharedPrefsVisitedPlacesDB (context : Context) {
 
         val type = object : TypeToken<List<VisitedPlaceModel>>() {}.type
         val goods: List<VisitedPlaceModel> = gson.fromJson(listInStr, type)
-        return goods as MutableList<VisitedPlaceModel>
+
+        return if (goods.isEmpty()) { null }
+                else { goods }
     }
 
-    suspend fun savePlaces(goods: List<VisitedPlaceModel>) {
+    private suspend fun savePlaces(goods: List<VisitedPlaceModel>) {
         sPrefs.edit()
             .putString("VisitedPlaceModels", gson.toJson(goods))
             .apply()

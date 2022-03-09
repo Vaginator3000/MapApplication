@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.template.mapapplication.R
@@ -83,6 +82,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                                 is Result.Error -> {
                                     showToast(getString(R.string.user_already_exists))
                                 }
+                                is Result.Loading -> {
+                                    // do nothing
+                                }
                                 is Result.Success -> {
                                     showSaveSessionDialog(loginOrEmail = login)
                                     navigateToNextFragment()
@@ -132,7 +134,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         AlertDialog.Builder(requireContext())
             .setMessage(loginAs)
             .setPositiveButton(getString(R.string.positive_answer)) { _, _ ->
-            //    navigateToNextFragment()
+                navigateToNextFragment()
             }
             .setNegativeButton(getString(R.string.negative_answer)) { _, _ ->
                 loginViewModel.removeSession()

@@ -8,11 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.template.domain.login.Authentication
 import com.template.domain.login.Registration
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
 
 class LoginViewModel(
     private val sharedPrefsAuthImpl : Authentication,
     private val sharedPrefsRegImpl : Registration
-    ) : ViewModel() {
+    ) : ViewModel(), KoinComponent {
 
     fun tryAuthenticationByData(loginOrEmail: String, password: String) = liveData<Result<LoginUserModel>> {
         if (sharedPrefsAuthImpl.authByData(loginOrEmail = loginOrEmail, password = password)) {
