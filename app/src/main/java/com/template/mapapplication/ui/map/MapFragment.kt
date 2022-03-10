@@ -26,8 +26,11 @@ import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.yandex.mapkit.map.InputListener
+import com.yandex.mapkit.map.Map
 
-class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener {
+
+class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener, InputListener {
     private val binding: FragmentMapBinding by viewBinding(FragmentMapBinding::bind)
 
     private val mapViewModel by viewModel<MapViewModel>()
@@ -35,6 +38,7 @@ class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener 
     private val mapKitFactory by lazy { MapKitFactory.getInstance() }
     private val userLocationLayer by lazy { mapKitFactory.createUserLocationLayer(binding.mapview.mapWindow) }
     private val locationManager by lazy { mapKitFactory.createLocationManager() }
+    private val placesTrakingHelper by lazy { PlacesTrakingHelper(locationManager) }
 
     override fun onStart() {
         super.onStart()
@@ -54,13 +58,14 @@ class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener 
             Animation(Animation.Type.SMOOTH, 0f),
             null
         )
+        binding.mapview.map.addInputListener(this)
     }
 
     private fun setMapOnCurrentLocation() {
         userLocationLayer.isVisible = true
         userLocationLayer.isHeadingEnabled = false /* true - маркер статичный, вращается карта, false - наоборот */
         userLocationLayer.setObjectListener(this)
-        PlacesTrakingHelper(locationManager).startTrackingLocation()
+        placesTrakingHelper.startTrackingLocation()
     }
 
     private fun requestAllPermissions() {
@@ -136,4 +141,10 @@ class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener 
     override fun onObjectRemoved(p0: UserLocationView) = Unit
 
     override fun onObjectUpdated(p0: UserLocationView, p1: ObjectEvent) = Unit
+
+    override fun onMapTap(p0: Map, p1: Point) = Unit
+
+    override fun onMapLongTap(p0: Map, p1: Point) {
+        placesTrakingHelper.saveCurrentLocation()
+    }
 }
