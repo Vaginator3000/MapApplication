@@ -16,30 +16,21 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class PlacesTrakingHelper(private val locationManager: LocationManager) : LocationListener, KoinComponent {
-    var currentAddress : String? = null
-    var previousAddress : String? = null
-    val spVisitedPlacesRepositoryImpl by inject<VisitedPlacesRepository>()
+    private var currentLocation : Location? = null
+    private val spVisitedPlacesRepositoryImpl by inject<VisitedPlacesRepository>()
 
     override fun onLocationUpdated(p0: Location) {
-        checkLocationIsChanged(p0)
+        currentLocation = p0
     }
 
-    private fun checkLocationIsChanged(newLocation: Location) {
+    fun saveCurrentLocation() {
+        currentLocation ?: return
         CoroutineScope(Dispatchers.IO).launch {
-            val geocode = "${newLocation.position.longitude}, ${newLocation.position.latitude}"
+            val geocode = "${currentLocation!!.position.longitude}, ${currentLocation!!.position.latitude}"
             val address = GeocodeRepositoryImpl()
                 .getAddress(key = KeyClass().GeocodeKey, geocode = geocode)
                 .getFullAddress()
-            //
-
-            previousAddress = currentAddress
-            currentAddress = address
-
-            //Фиксируем место если оно не изменилось с прошлой проверки. Значит, юзер задержался в этом месте
-            //Или если это первая проверка и предыдущего еще нет
-            if (previousAddress == null || previousAddress == currentAddress) {
-                addPlaceToDB(currentAddress!!) //проверка на нул выше
-            }
+            addPlaceToDB(address)
         }
     }
 
