@@ -28,6 +28,7 @@ import com.yandex.mapkit.user_location.UserLocationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.yandex.mapkit.map.InputListener
 import com.yandex.mapkit.map.Map
+import kotlinx.coroutines.runBlocking
 
 
 class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener, InputListener {
@@ -39,6 +40,8 @@ class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener,
     private val userLocationLayer by lazy { mapKitFactory.createUserLocationLayer(binding.mapview.mapWindow) }
     private val locationManager by lazy { mapKitFactory.createLocationManager() }
     private val placesTrakingHelper by lazy { PlacesTrakingHelper(locationManager) }
+
+    private var isLocationFound = false
 
     override fun onStart() {
         super.onStart()
@@ -125,6 +128,9 @@ class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener,
     }
 
     override fun onObjectAdded(userLocationView: UserLocationView) {
+        if (isLocationFound) return
+        isLocationFound = true
+
         with(binding) {
             //Центрируем карту, установив точку с местоположением по центру
             val widthCenter = mapview.width / 2f
@@ -145,6 +151,28 @@ class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener,
     override fun onMapTap(p0: Map, p1: Point) = Unit
 
     override fun onMapLongTap(p0: Map, p1: Point) {
-        placesTrakingHelper.saveCurrentLocation()
+        showSavePlaceRequestDialog(p1)
+    }
+
+    private fun showSavePlaceRequestDialog(point : Point) {
+        runBlocking {
+            val geocode = "${point.longitude}, ${point.latitude}"
+            val address = placesTrakingHelper.getAddressByGeocode(geocode)
+            val saveLocationRequestMsg = getString(R.string.save_place_request).format(address)
+
+            AlertDialog.Builder(context)
+                .setMessage(saveLocationRequestMsg)
+                .setPositiveButton(getString(R.string.positive_answer)) { _, _ ->
+                    placesTrakingHelper.saveLocationByGeocode(geocode)
+                    showToast(getString(R.string.saving_success))
+                }
+                .setNeutralButton(getString(R.string.save_current_location_answer)) { _, _ ->
+                    placesTrakingHelper.saveCurrentLocation()
+                    showToast(getString(R.string.saving_success))
+                }
+                .setNegativeButton(getString(R.string.negative_answer)) { _, _ -> {} }
+                .create()
+                .show()
+        }
     }
 }
