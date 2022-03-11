@@ -18,6 +18,7 @@ import com.fondesa.kpermissions.extension.send
 import com.google.android.gms.location.LocationSettingsRequest
 import com.template.mapapplication.R
 import com.template.mapapplication.databinding.FragmentMapBinding
+import com.template.models.Result
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
@@ -39,7 +40,6 @@ class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener,
     private val mapKitFactory by lazy { MapKitFactory.getInstance() }
     private val userLocationLayer by lazy { mapKitFactory.createUserLocationLayer(binding.mapview.mapWindow) }
     private val locationManager by lazy { mapKitFactory.createLocationManager() }
-    private val placesTrakingHelper by lazy { PlacesTrakingHelper(locationManager) }
 
     private var isLocationFound = false
 
@@ -66,9 +66,10 @@ class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener,
 
     private fun setMapOnCurrentLocation() {
         userLocationLayer.isVisible = true
-        userLocationLayer.isHeadingEnabled = false /* true - маркер статичный, вращается карта, false - наоборот */
+        userLocationLayer.isHeadingEnabled =
+            false /* true - маркер статичный, вращается карта, false - наоборот */
         userLocationLayer.setObjectListener(this)
-        placesTrakingHelper.startTrackingLocation()
+        mapViewModel.startTrackingLocation(PlacesTrackingHelper(locationManager))
     }
 
     private fun requestAllPermissions() {
@@ -121,7 +122,7 @@ class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener,
     }
 
     override fun onStop() {
-        PlacesTrakingHelper(locationManager).stopTrackingLocation()
+        PlacesTrackingHelper(locationManager).stopTrackingLocation()
         mapKitFactory.onStop()
         binding.mapview.onStop()
         super.onStop()
@@ -154,25 +155,31 @@ class MapFragment : Fragment(R.layout.fragment_map), UserLocationObjectListener,
         showSavePlaceRequestDialog(p1)
     }
 
-    private fun showSavePlaceRequestDialog(point : Point) {
-        runBlocking {
-            val geocode = "${point.longitude}, ${point.latitude}"
-            val address = placesTrakingHelper.getAddressByGeocode(geocode)
-            val saveLocationRequestMsg = getString(R.string.save_place_request).format(address)
+    private fun showSavePlaceRequestDialog(point: Point) {
+        val geocode = "${point.longitude}, ${point.latitude}"
+        mapViewModel.getAddressByGeocode(geocode).observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Success -> {
+                    val saveLocationRequestMsg = getString(R.string.save_place_request).format(mapViewModel.currentAddress)
 
-            AlertDialog.Builder(context)
-                .setMessage(saveLocationRequestMsg)
-                .setPositiveButton(getString(R.string.positive_answer)) { _, _ ->
-                    placesTrakingHelper.saveLocationByGeocode(geocode)
-                    showToast(getString(R.string.saving_success))
+                    AlertDialog.Builder(context)
+                        .setMessage(saveLocationRequestMsg)
+                        .setPositiveButton(getString(R.string.positive_answer)) { _, _ ->
+                            mapViewModel.saveLocationByGeocode(geocode)
+                            showToast(getString(R.string.saving_success))
+                        }
+                        .setNeutralButton(getString(R.string.save_current_location_answer)) { _, _ ->
+                            mapViewModel.saveCurrentLocation()
+                            showToast(getString(R.string.saving_success))
+                        }
+                        .setNegativeButton(getString(R.string.negative_answer)) { _, _ -> {} }
+                        .create()
+                        .show()
                 }
-                .setNeutralButton(getString(R.string.save_current_location_answer)) { _, _ ->
-                    placesTrakingHelper.saveCurrentLocation()
-                    showToast(getString(R.string.saving_success))
+                else -> {
+                    // do nothing
                 }
-                .setNegativeButton(getString(R.string.negative_answer)) { _, _ -> {} }
-                .create()
-                .show()
+            }
         }
     }
 }
