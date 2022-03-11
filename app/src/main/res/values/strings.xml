@@ -31,4 +31,8 @@
     <string name="positive_answer">Да</string>
     <string name="negative_answer">Нет</string>
     <string name="login_as_request">Продолжить как %s?</string>
+
+    <string name="save_place_request">%s\nСохранить?</string>
+    <string name="save_current_location_answer">Сохранить текущее местоположение</string>
+    <string name="saving_success">Сохранено!</string>
 </resources>

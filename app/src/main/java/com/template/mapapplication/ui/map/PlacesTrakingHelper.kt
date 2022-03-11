@@ -27,11 +27,22 @@ class PlacesTrakingHelper(private val locationManager: LocationManager) : Locati
         currentLocation ?: return
         CoroutineScope(Dispatchers.IO).launch {
             val geocode = "${currentLocation!!.position.longitude}, ${currentLocation!!.position.latitude}"
-            val address = GeocodeRepositoryImpl()
-                .getAddress(key = KeyClass().GeocodeKey, geocode = geocode)
-                .getFullAddress()
+            val address = getAddressByGeocode(geocode)
             addPlaceToDB(address)
         }
+    }
+
+    fun saveLocationByGeocode(geocode : String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val address = getAddressByGeocode(geocode)
+            addPlaceToDB(address)
+        }
+    }
+
+    suspend fun getAddressByGeocode(geocode : String) : String {
+        return GeocodeRepositoryImpl()
+            .getAddress(key = KeyClass().GeocodeKey, geocode = geocode)
+            .getFullAddress()
     }
 
     private fun addPlaceToDB(address: String) {
